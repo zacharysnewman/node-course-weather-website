@@ -7,6 +7,7 @@ const forecast = require('./utils/forecast');
 
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 // Define paths for Express config
 const publicDirectoryPath = path.join(__dirname, '../public');
@@ -44,13 +45,13 @@ app.get('/help', (req, res) => {
 });
 
 // Weather
-app.get('/weather', ({query: {address}} = {}, res) => {
-    if(!address) {
+app.get('/weather', ({ query: { address } } = {}, res) => {
+    if (!address) {
         return res.send({
-            error:'You must provide an address.'
+            error: 'You must provide an address.'
         });
     }
-    
+
     geocode(address, (error, { latitude, longitude, location } = {}) => {
         if (error) {
             return res.send({ error });
@@ -58,7 +59,7 @@ app.get('/weather', ({query: {address}} = {}, res) => {
 
         forecast(latitude, longitude, (error, forecast) => {
             if (error) {
-                return res.send({ error });            
+                return res.send({ error });
             }
 
             res.send({
@@ -72,12 +73,12 @@ app.get('/weather', ({query: {address}} = {}, res) => {
 
 // Products
 app.get('/products', (req, res) => {
-    if(!req.query.search) {
+    if (!req.query.search) {
         return res.send({
-            error:'You must provide a search term.'
+            error: 'You must provide a search term.'
         });
     }
-    
+
     console.log(req.query.search);
     res.send({
         products: []
@@ -102,6 +103,6 @@ app.get('*', (req, res) => {
 
 
 
-app.listen(3000, () => { // HTTP Default Port is 80
-    console.log('Server is up on port 3000.');
+app.listen(port, () => { // HTTP Default Port is 80
+    console.log('Server is up on port ' + port);
 });
